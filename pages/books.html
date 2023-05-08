@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../styles/books.css">
+
+    <title>Carti</title>
+
+</head>
+
+<body>
+    <header class="header">
+        <nav>
+            <ul>
+                <li><a href="books.html">Cărți</a></li>
+                <li><a href="about.html">Despre noi</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="cos.html">Coș</a></li>
+                <li id="admin-link" style="display:none;"><a href="admin.html">Admin</a></li>
+                <li>
+                    <form id="search-form">
+                        <input class="search" type="text" id="search-input" placeholder="Caută după titlu sau autor">
+                    </form>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+
+    <div class="book-grid">
+        <div id="books" class="new">
+        </div>
+    </div>
+
+
+
+    <script src="../backend/main.js"></script>
+    <script>
+        fetch('http://localhost:3000/user-details')
+            .then(response => response.json())
+            .then(user => {
+                if (user.is_admin === 1) { document.getElementById('admin-link').style.display = 'block'; }
+
+            })
+            .catch(error => console.error(error));
+
+
+        fetch('http://localhost:3000/books')
+            .then(response => response.json())
+            .then(data => {
+                let books = data;
+                const booksDiv = document.getElementById('books');
+                const renderBooks = () => {
+                    booksDiv.innerHTML = '';
+                    books.forEach(book => {
+                        if (book.stoc !== 0) {
+                            const bookDiv = document.createElement('div');
+                            bookDiv.className = "book";
+                            bookDiv.innerHTML = `
+            <img src="../photos/${book.id}.jpeg" alt="${book.titlu}">
+            <h3>${book.titlu} - ${book.autor}</h3>
+            <p>RON ${book.pret}.00</p>
+            <button id="add-to-cart">Adaugă în coș</button>
+            `;
+                            booksDiv.appendChild(bookDiv);
+                        }
+
+                    });
+                };
+                renderBooks();
+                const searchForm = document.getElementById('search-form');
+                searchForm.addEventListener('input', (event) => {
+                    event.preventDefault();
+                    const searchInput = document.getElementById('search-input');
+                    const query = searchInput.value.trim().toLowerCase();
+                    if (query) {
+                        books = data.filter(book => book.titlu.toLowerCase().includes(query) || book.autor.toLowerCase().includes(query));
+                        console.log(books);
+                    } else {
+                        books = data;
+                    }
+                    renderBooks();
+                });
+            })
+            .catch(error => console.error('Error retrieving book data:', error));
+
+
+        const addToCartButtons = document.querySelectorAll('.add-to-cart');
+
+
+        document.body.addEventListener('click', function (event) {
+            if (event.target.id == 'add-to-cart') {
+                const bookTitleAndAuthor = event.target.parentElement.querySelector('h3').textContent;
+                const bookTitle = bookTitleAndAuthor.split("-")[0].trimEnd();
+                const bookAuthor = bookTitleAndAuthor.split("-")[1].trim();
+                const bookPrice = event.target.parentElement.querySelector('p').textContent;
+                const bookPath = event.target.parentElement.querySelector('img').src.split('/');
+                const lastItem = bookPath[bookPath.length - 1];
+                const bookId = lastItem.split('.')[0];
+
+                addToCart(bookId, bookTitle, bookPrice, bookAuthor);
+            };
+        });
+        function addToCart(bookId, title, price, author) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+            cart.push({ id: bookId, titlu: title, pret: price, autor: author });
+
+
+            localStorage.setItem('cart', JSON.stringify(cart));
+        }
+
+
+    </script>
+
+</body>
+
+
+</html>

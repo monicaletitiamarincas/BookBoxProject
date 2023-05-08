@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../styles/contact.css">
+
+    <title>Contact</title>
+</head>
+
+<body>
+
+    <header class="header">
+        <nav>
+            <ul>
+                <li><a href="books.html">Cărți</a></li>
+                <li><a href="about.html">Despre noi</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="cos.html">Coș</a></li>
+                <li id="admin-link" style="display:none;"><a href="admin.html">Admin</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="contact__header">
+        <div class="contact__header-wrap">
+            <h2 class="contact__header-title">Contactează-ne</h2>
+            <p class="contact__header-text">Ai nevoie de ajutor sau vrei să ne întrebi ceva? Lasă-ne
+                un mesaj pe email sau sună la numărul de telefon afișat.</p>
+        </div>
+    </div>
+    <div class="contact">
+        <div><img src="../photos/telefon.webp" alt="Telefon">
+            <p>0721 975 735</p>
+        </div>
+        <div> <img src="../photos/mail.png" alt="Email">
+            <p>contact@bookbox.com</p>
+        </div>
+
+    </div>
+    <script src="../backend/main.js"></script>
+    <script>
+        fetch('http://localhost:3000/user-details')
+            .then(response => response.json())
+            .then(user => {
+                if (user.is_admin === 1) { document.getElementById('admin-link').style.display = 'block'; }
+
+            })
+            .catch(error => console.error(error));
+    </script>
+</body>
+
+
+</html>

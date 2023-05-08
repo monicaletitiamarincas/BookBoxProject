@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../styles/about.css">
+
+    <title>Despre noi</title>
+</head>
+
+<body>
+
+    <header class="header">
+        <nav>
+            <ul>
+                <li><a href="books.html">Cărți</a></li>
+                <li><a href="about.html">Despre noi</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="cos.html">Coș</a></li>
+                <li id="admin-link" style="display:none;"><a href="admin.html">Admin</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="about-us-grid">
+        <img src="../photos/bookbox-logo.png" alt="BookBox Logo">
+        <div class="text">BookBox este un website dedicat achiziționării unor cărți best-sellers direct de la editură.
+            În acest mod, utilizatorii au posibilitatea
+            să cumpere cărțile la prețul lor real, fără adaosul unor librării online sau fizice.</div>
+        <div class="text">Conectarea este simplă, însă BookBox este un website cu -circuit închis-, acest lucru
+            însemnând că o persoană își poate crea un cont
+            doar dacă deține un cod de invitație.
+        </div>
+        <div class="text">Codul de invitație îl puteți partaja chiar dvs. intrând în secțiunea -Contul meu- și copiind
+            codul numeric, format din 10 cifre.</div>
+        <div class="text">Recomandăm să partajați un cod de invitație numai cu persoanele care au o pasiune pentru
+            lectură
+            deoarece numărul cărților este redus (în număr de 20 în fiecare lună) și stocul lor este limitat.
+        </div>
+        <div class="text">În funcție de informațiile transmise de edituri, BookBox alege lunar cele mai dorite 20 de
+            cărți.</div>
+        <div class="text">De asemenea, BookBox este primul site/librărie online care are access la cărțile noi. Ele sunt
+            scoase spre vânzare pe site-ul nostru cu
+            o săptămână înainte de lansarea în marile librării.
+        </div>
+        <div class="text">Mulțumim pentru încrederea acordată! Spor la cumpărături!
+        </div>
+    </div>
+    <footer>
+        <p>&copy; 2023 BookBox. Toate drepturile rezervate.</p>
+    </footer>
+
+    <script src="../backend/main.js"></script>
+    <script>
+        fetch('http://localhost:3000/user-details')
+            .then(response => response.json())
+            .then(user => {
+                if (user.is_admin === 1) { document.getElementById('admin-link').style.display = 'block'; }
+
+            })
+            .catch(error => console.error(error));
+    </script>
+
+</body>
+
+
+</html>

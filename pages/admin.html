@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../styles/admin.css">
+    <title>Admin</title>
+<!-- //comment -->
+</head>
+
+<body>
+    <header class="header">
+        <nav>
+            <ul>
+                <li><a href="books.html">Cărți</a></li>
+                <li><a href="about.html">Despre noi</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="cos.html">Coș</a></li>
+                <li id="admin"><a href="admin.html">Admin</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="main-content">
+        <button id="add-book-button">Adaugă o carte nouă</button>
+        <table id="books-table">
+            <thead>
+                <tr>
+                    <th onclick="sortTableNumerically(0)">ID</th>
+                    <th onclick="sortTable(1)">Titlu</th>
+                    <th onclick="sortTable(2)">Autor</th>
+                    <th onclick="sortTableNumerically(3)">Preț</th>
+                    <th onclick="sortTableNumerically(4)">Stoc</th>
+                    <th>Acțiune</th>
+                </tr>
+            </thead>
+            <tbody id="books-table-body">
+            </tbody>
+        </table>
+        <div id="modal">
+            <div id="modal-content">
+                <div id="modal-header">
+                    <h2>Adaugă o carte nouă</h2>
+                    <button id="cancel-button">Ieși</button>
+                </div>
+                <form id="add-book-form">
+                    <label for="title">Titlu:</label>
+                    <input type="text" id="title" name="title" required><br><br>
+                    <label for="author">Autor:</label>
+                    <input type="text" id="author" name="author" required><br><br>
+                    <label for="price">Preț:</label>
+                    <input type="number" id="price" name="price" min="0" step="0.01" required><br><br>
+                    <label for="stock">Stoc:</label>
+                    <input type="number" id="stock" name="stock" min="0" required><br><br>
+                    <button type="submit">Adaugă</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+
+
+
+
+        //role validation here
+        function sortTable(n) {
+            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+            table = document.getElementById("books-table");
+            switching = true;
+
+            dir = "asc";
+
+            while (switching) {
+
+                switching = false;
+                rows = table.rows;
+
+                for (i = 1; i < (rows.length - 1); i++) {
+
+                    shouldSwitch = false;
+
+                    x = rows[i].getElementsByTagName("TD")[n];
+                    y = rows[i + 1].getElementsByTagName("TD")[n];
+
+                    if (dir == "asc") {
+                        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+
+                            shouldSwitch = true;
+                            break;
+                        }
+
+                    } else if (dir == "desc") {
+                        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+
+                            shouldSwitch = true;
+                            break;
+                        }
+
+                    }
+                }
+                if (shouldSwitch) {
+
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+
+                    switchcount++;
+                } else {
+
+                    if (switchcount == 0 && dir == "asc") {
+                        dir = "desc";
+                        switching = true;
+                    }
+                }
+            }
+        }
+
+        function sortTableNumerically(n) {
+            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+            table = document.getElementById("books-table");
+            switching = true;
+            dir = "asc";
+            while (switching) {
+                switching = false;
+                rows = table.rows;
+
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = rows[i].getElementsByTagName("TD")[n];
+                    y = rows[i + 1].getElementsByTagName("TD")[n];
+                    if (dir == "asc") {
+                        if (Number(x.innerHTML) > Number(y.innerHTML)) {
+
+                            shouldSwitch = true;
+                            break;
+                        }
+
+                    } else if (dir == "desc") {
+                        if (Number(x.innerHTML) > Number(y.innerHTML)) {
+                            shouldSwitch = true;
+                            break;
+                        }
+
+                    }
+                }
+                if (shouldSwitch) {
+
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+
+                    switchcount++;
+                } else {
+
+                    if (switchcount == 0 && dir == "asc") {
+                        dir = "desc";
+                        switching = true;
+                    }
+                }
+            }
+        }
+
+
+        const modal = document.getElementById('modal');
+        const addButton = document.getElementById('add-book-button');
+        const cancelButton = document.getElementById('cancel-button');
+        addButton.addEventListener('click', () => {
+            modal.style.display = 'block';
+        });
+
+        cancelButton.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+        const addBookForm = document.getElementById('add-book-form');
+        addBookForm.addEventListener('submit', event => {
+            event.preventDefault();
+            const formData = new FormData(addBookForm);
+            const newBook = {
+                title: formData.get('title'),
+                author: formData.get('author'),
+                price: parseFloat(formData.get('price')),
+                stock: parseInt(formData.get('stock')),
+            };
+            fetch('http://localhost:3000/add-books', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(newBook)
+            })
+                .then(response => response.json())
+                .then(book => {
+                    const row = document.createElement('tr');
+                    const idCell = document.createElement('td');
+                    idCell.textContent = book.id;
+                    row.appendChild(idCell);
+                    const titleCell = document.createElement('td');
+                    titleCell.textContent = book.title;
+                    row.appendChild(titleCell);
+                    const authorCell = document.createElement('td');
+                    authorCell.textContent = book.author;
+                    row.appendChild(authorCell);
+                    const priceCell = document.createElement('td');
+                    priceCell.textContent = book.price;
+                    row.appendChild(priceCell);
+                    const stockCell = document.createElement('td');
+                    stockCell.textContent = book.stock;
+                    row.appendChild(stockCell);
+                    booksTableBody.appendChild(row);
+                    modal.style.display = 'none';
+                })
+                .catch(error => {
+                    console.error('Error adding book:', error);
+                });
+        });
+
+        const booksTableBody = document.getElementById('books-table-body');
+
+        fetch('http://localhost:3000/books')
+            .then(response => response.json())
+            .then(books => {
+
+                books.forEach(book => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                            <td>${book.id}</td>
+                            <td contenteditable>${book.titlu}</td>
+                            <td contenteditable>${book.autor}</td>
+                            <td contenteditable>${book.pret}</td>
+                            <td contenteditable>${book.stoc}</td>
+                            <td>
+                                <button class="edit-button">Editează</button>
+                                <button class="delete-button">Șterge</button>
+                            </td>
+                            `;
+                    booksTableBody.appendChild(row);
+                });
+
+                const deleteButtons = document.getElementsByClassName('delete-button');
+                Array.from(deleteButtons).forEach(deleteBtn => {
+                    deleteBtn.addEventListener('click', () => {
+
+
+                        const bookId = deleteBtn.parentElement.parentElement.querySelector('td:nth-child(1)').textContent;
+
+                        fetch(`http://localhost:3000/books/${bookId}`, { method: 'DELETE' })
+                            .then(() => {
+                                // Remove the book row from the table
+                                deleteBtn.parentElement.remove();
+                            })
+                            .catch(error => {
+                                console.error('Error deleting book:', error);
+                            });
+                    })
+                })
+
+                const editButtons = document.getElementsByClassName('edit-button');
+                Array.from(editButtons).forEach(editButton => {
+                    editButton.addEventListener('click', () => {
+
+                        Array.from(editButtons).forEach(button => button.disabled = true);
+
+                        editButton.disabled = false;
+                    });
+                });
+
+
+                const cells = document.getElementsByTagName('td');
+                Array.from(cells).forEach(cell => {
+                    cell.addEventListener('click', () => {
+
+                        if (cell.parentNode.querySelector('.edit-button:disabled') !== null && cell.contentEditable !== 'true') {
+                            cell.contentEditable = true;
+                            cell.focus();
+                        }
+                    });
+                });
+
+
+                const saveButton = document.createElement('button');
+                saveButton.textContent = 'Save';
+                saveButton.style.display = 'none';
+                saveButton.addEventListener('click', () => {
+
+                    const editedRow = document.querySelector('#books-table-body tr:not(:last-child) .edit-button:enabled').parentNode.parentNode;
+                    const editedBook = {
+                        id: editedRow.querySelector('td:nth-child(1)').textContent,
+                        title: editedRow.querySelector('td:nth-child(2)').textContent,
+                        author: editedRow.querySelector('td:nth-child(3)').textContent,
+                        price: editedRow.querySelector('td:nth-child(4)').textContent,
+                        stock: editedRow.querySelector('td:nth-child(5)').textContent,
+                    };
+
+
+                    fetch(`http://localhost:3000/books/${editedBook.id}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(editedBook)
+                    })
+                        .then(response => response.json())
+                        .then(updatedBook => {
+
+                            const updatedRow = document.createElement('tr');
+                            updatedRow.innerHTML = `
+                                <td>${updatedBook.id}</td>
+                                <td contenteditable>${updatedBook.titlu}</td>
+                                <td contenteditable>${updatedBook.autor}</td>
+                                <td contenteditable>${updatedBook.pret}</td>
+                                <td contenteditable>${updatedBook.stoc}</td>
+                                <td>
+                                <button class="edit-button">Editează</button>
+                                <button class="delete-button">Șterge</button>
+                                </td>
+                            `;
+                            editedRow.parentNode.replaceChild(updatedRow, editedRow);
+
+
+                            const editButton = updatedRow.querySelector('.edit-button');
+                            editButton.addEventListener('click', () => {
+
+                                Array.from(editButtons).forEach(button => button.disabled = true);
+
+                                editButton.disabled = false;
+                            });
+                        })
+                        .catch(error => {
+                            console.error('Error updating book:', error);
+                            alert('Error updating book');
+                        })
+                        .finally(() => {
+
+                            saveButton.style.display = 'none';
+                        });
+                });
+
+
+                booksTableBody.addEventListener('click', event => {
+                    if (event.target.contentEditable === 'true') {
+                        saveButton.style.display = 'block';
+                    }
+                });
+
+
+                booksTableBody.appendChild(saveButton);
+            })
+            .catch(error => {
+                console.error('Error getting books:', error);
+                alert('Error getting books');
+            }
+
+
+            );
+
+
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../styles/cos.css">
+
+    <title>Cos</title>
+</head>
+
+<body>
+
+    <header class="header">
+        <nav>
+            <ul>
+                <li><a href="books.html">Cărți</a></li>
+                <li><a href="about.html">Despre noi</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="cos.html">Coș</a></li>
+                <li id="admin-link" style="display:none;"><a href="admin.html">Admin</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="maincontent">
+        <div>
+            <h2>Coșul dvs.</h2>
+
+            <div id="cart">
+            </div>
+
+        </div>
+
+
+
+        <div class="cart1__pay">
+            <h2>Sumar comandă</h2>
+            <div>
+                <div>
+                    <p id="total-price"></p>
+                </div>
+                <div>
+                    <p id="livrare">Cost livrare: 3.00 RON</p>
+                </div>
+            </div>
+            <div>
+                <div>
+                    <p id="granTotal"></p>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h2 class="cart1__pay__title">Date de livrare</h2>
+            <form id="order-form">
+                <table>
+                    <tr>
+                        <th>Adresă</th>
+                        <th>Telefon</th>
+                        <th>Oraș</th>
+                        <th>Județ</th>
+                        <th>Cod Poștal</th>
+                    </tr>
+                    <tr>
+                        <form id="order-form" action="orders" method="POST">
+                            <td><input type="text" name="address" required></td>
+                            <td><input type="text" name="telephone" required></td>
+                            <td><input type="text" name="city" required></td>
+                            <td><select name="county" id="county" required>
+                                    <option value="BH">Bihor</option>
+                                    <option value="AB">Alba</option>
+                                    <option value="AR">Arad</option>
+                                    <option value="CJ">Cluj</option>
+                                    <option value="IF">Ilfov</option>
+                                    <option value="TM">Timis</option>
+                                    <option value="SJ">Salaj</option>
+                                    <option value="AG">Arges</option>
+                                    <option value="MM">Maramures</option>
+                                    <option value="BN">Bistrita-Nasaud</option>
+                                    <option value="SM">Satu-Mare</option>
+                                    <option value="SV">Suceava</option>
+                                    <option value="BT">Botosani</option>
+                                    <option value="IS">Iasi</option>
+                                    <option value="VN">Vrancea</option>
+                                    <option value="GL">Galati</option>
+                                    <option value="BV">Brasov</option>
+                                    <option value="HR">Harghita</option>
+                                    <option value="CV">Covasna</option>
+                                    <option value="CS">Caras-Severin</option>
+                                    <option value="MH">Mehedinti</option>
+                                    <option value="SB">Sibiu</option>
+                                    <option value="OT">Olt</option>
+                                    <option value="DJ">Dolj</option>
+                                    <option value="GJ">Gorj</option>
+                                    <option value="TL">Teleorman</option>
+                                    <option value="IL">Ialomita</option>
+                                    <option value="DB">Dambovita</option>
+                                    <option value="CT">Constanta</option>
+                                    <option value="TL">Tulcea</option>
+                                    <option value="PH">Prahova</option>
+                                    <option value="VL">Valcea</option>
+                                </select></td>
+                            <td><input type="text" name="postalCode" required></td>
+                            <td><button type="submit" id="send-btn">Trimite comanda</button></td>
+                        </form>
+
+                    </tr>
+                </table>
+            </form>
+
+        </div>
+    </div>
+
+
+
+    <script src="../backend/main.js"></script>
+    <script>
+
+
+        fetch('http://localhost:3000/user-details')
+            .then(response => response.json())
+            .then(user => {
+                if (user.is_admin === 1) { document.getElementById('admin-link').style.display = 'block'; }
+
+            })
+            .catch(error => console.error(error));
+        // Get the cart from local storage
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        // Get the cart element
+        const cartDiv = document.querySelector('#cart');
+
+        // Display the cart contents
+        cartDiv.innerHTML = '';
+        cart.forEach(book => {
+            const bookDiv = document.createElement('div');
+            bookDiv.className = 'cart-book';
+            bookDiv.innerHTML = `
+            <p class="cart-book-title">${book.titlu} - ${book.autor}: ${book.pret}</p>
+          `;
+            cartDiv.appendChild(bookDiv);
+        });
+
+        // Display the total price
+        const totalPrice = cart.reduce((total, book) => total + parseFloat(book.pret.split(" ")[1]), 0);
+
+        const totalPriceElement = document.querySelector('#total-price');
+        const total = document.getElementById('granTotal');
+        const livrare = document.getElementById('livrare');
+        const costLivrare = parseFloat(livrare.textContent.split(" ")[2])
+
+        const totalFinalPrice = totalPrice + costLivrare;
+        total.textContent = `Cost total: ${totalFinalPrice}.00 RON`
+        totalPriceElement.textContent = `Preț produse: ${totalPrice}.00 RON`;
+
+
+
+        const orderForm = document.querySelector('#order-form');
+        const submitButton = orderForm.querySelector('button[type="submit"]');
+
+        submitButton.addEventListener('click', async (event) => {
+            event.preventDefault();
+
+            const addressInput = orderForm.querySelector('input[name="address"]');
+            const telephoneInput = orderForm.querySelector('input[name="telephone"]');
+            const cityInput = orderForm.querySelector('input[name="city"]');
+            const postalCodeInput = orderForm.querySelector('input[name="postalCode"]');
+
+            const formData = {
+                totalCost: totalFinalPrice,
+                bookIds: cart.map(book => book.id),
+                adresa: addressInput.value,
+                telefon: telephoneInput.value,
+                oras: cityInput.value,
+                cod_postal: postalCodeInput.value,
+            };
+
+            try {
+                const response = await fetch('http://localhost:3000/orders', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    alert('Order placed successfully');
+                    localStorage.removeItem('cart');
+                    window.location.href = 'books.html';
+                } else {
+                    throw new Error('Failed to place order');
+                }
+            } catch (error) {
+                console.error(error);
+                alert('An error occurred while placing your order', error);
+            }
+        });
+    </script>
+
+
+
+    </script>
+
+
+</body>
+
+
+</html>

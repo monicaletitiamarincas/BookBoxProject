@@ -1,0 +1,124 @@
+nav {
+    width: 100%;
+    height: 50px;
+    background-color: #b6dbff;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+nav ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    height: 100%;
+}
+
+nav li {
+    margin: 0 10px;
+}
+
+nav a {
+    color: #333;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+nav a:hover {
+    background-color: #5ba0e9;
+    color: #fff;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th,
+td {
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+th {
+    background-color: #5ba0e9;
+    color: white;
+}
+
+#add-book-button {
+    margin-bottom: 16px;
+}
+
+#modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(90, 101, 183, 0.4);
+}
+
+#modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 20%;
+    border-radius: 20px;
+}
+
+#modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#modal-header h2 {
+    color: #315c89;
+    padding-bottom: 10px;
+}
+
+#modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 16px;
+}
+
+#modal-footer button {
+    margin-left: 16px;
+}
+
+.main-content {
+    margin-top: 100px;
+}
+
+.edit-button {
+    background-color: #c0d4e9;
+}
+
+#add-book-button {
+    background-color: rgb(157, 214, 157);
+}
+
+.delete-button {
+    background-color: rgb(227, 112, 112);
+}
+
+button {
+    border-radius: 5px;
+    border-style: hidden;
+    height: 30px;
+}

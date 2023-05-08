@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../styles/main.css">
+
+    <title>Inregistrare</title>
+</head>
+
+<body>
+    <div class="flex">
+        <img src="../photos/bookbox-logo.png" alt="BookBox Logo">
+        <div class="container">
+            <form id="signup-form">
+                <label for="username">Nume de utilizator:</label>
+                <input type="text" id="username" name="username" required><br><br>
+                <label for="password">Parolă:</label>
+                <input type="password" id="password" name="password" required><br><br>
+                <label for="invite-code">Cod de invitație:</label>
+                <input type="text" id="invite-code" name="invite-code" required><br><br>
+                <button type="submit" id="signup-btn">Înregistrare</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const signupForm = document.getElementById("signup-form");
+        const signupBtn = document.getElementById("signup-btn");
+
+        signupForm.addEventListener("submit", (event) => {
+            event.preventDefault();
+
+            const formData = new FormData(signupForm);
+            const username = formData.get("username");
+            const password = formData.get("password");
+            const cod = formData.get("invite-code");
+
+            fetch('http://localhost:3000/signup', {
+                method: 'POST',
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username, password, cod })
+            })
+                .then(response => {
+                    if (response.ok) {
+                        // Redirect to the main page if login is successful
+                        window.location.href = "books.html";
+                    } else {
+                        // Display an error message if login fails
+                        alert("Signup failed");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error signing-up :", error);
+                    alert("Error signing-up");
+                });
+        });
+    </script>
+</body>
+
+</html>
