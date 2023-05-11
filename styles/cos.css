@@ -17,6 +17,12 @@ nav ul {
     height: 100%;
 }
 
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
 nav li {
     margin: 0 10px;
 }
