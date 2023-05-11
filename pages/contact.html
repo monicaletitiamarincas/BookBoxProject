@@ -38,11 +38,48 @@
         </div>
 
     </div>
+
+    <div id="faq-list">
+        <h4>FAQ</h4>
+        <ul>
+            <li>Cum invit pe cineva în cadrul BookBox?
+                <p>Trebuie să partajați cu acea persoană codul dvs. unic de client.</p>
+            </li>
+            <li>Unde pot să găsesc codul meu unic?
+                <p>În secțiunea -Contul meu-</p>
+            </li>
+            <li>În cât timp ajunge o comandă?
+                <p>Comenzile ajung de regulă în 2-3 zile lucrătoare.</p>
+            </li>
+            <li>Livrați înafara României?
+                <p>Nu, livrările se fac doar intern.</p>
+            </li>
+            <li>Sunt deținătorul unei librării și vreau să colaborăm. Cum procedez?
+                <p>Contactați-ne la adresa colaborari@bookbox.com</p>
+            </li>
+        </ul>
+        <label id="see-more-btn">See more...</label>
+    </div>
+
     <footer>
         <p>&copy; 2023 BookBox. Toate drepturile rezervate.</p>
     </footer>
     <script src="../backend/main.js"></script>
     <script>
+
+        const faqList = document.getElementById('faq-list');
+        const seeMoreBtn = document.getElementById('see-more-btn');
+
+        seeMoreBtn.addEventListener('click', function () {
+            faqList.classList.toggle('show-all');
+            if (faqList.classList.contains('show-all')) {
+                seeMoreBtn.textContent = 'See less...';
+            } else {
+                seeMoreBtn.textContent = 'See more...';
+            }
+        });
+
+
         fetch('http://localhost:3000/user-details')
             .then(response => response.json())
             .then(user => {

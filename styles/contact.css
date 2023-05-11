@@ -14,6 +14,19 @@ body {
     max-width: 50rem;
 }
 
+#faq-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#faq-list li:nth-child(n+4) {
+    display: none;
+}
+#faq-list.show-all li {
+    display: list-item;
+}
+
 .contact__header-title {
     font-size: 3.6rem;
     padding: 6rem 1rem 0;
