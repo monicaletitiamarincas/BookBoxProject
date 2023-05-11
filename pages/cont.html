@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../styles/cont.css">
+
+    <title>Despre noi</title>
+</head>
+
+<body>
+
+    <header class="header">
+        <nav>
+            <ul>
+                <li><a href="books.html">Cărți</a></li>
+                <li><a href="about.html">Despre noi</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="cos.html">Coș</a></li>
+                <li><a href="cont.html">Contul meu</a></li>
+                <li id="admin-link" style="display:none;"><a href="admin.html">Admin</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="flex">
+        <div class="container">
+
+            <div id="div" for="username">Nume de utilizator: <p id="space">-</p>
+                <div type="text" id="username" name="username"></div>
+            </div>
+            <br><br>
+            <div id="div" for="password">Cod unic client:<p id="space">-</p>
+                <div id="cod" name="cod"></div>
+            </div>
+            <br><br>
+            <div id="div" for="password">Cont admin:<p id="space">-</p>
+                <div id="admin" name="admin"></div>
+            </div>
+            <br><br>
+            <button id="logout">Ieși din cont</button>
+
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2023 BookBox. Toate drepturile rezervate.</p>
+    </footer>
+
+    <script src="../backend/main.js"></script>
+    <script>
+
+        const logout = document.getElementById('logout');
+        logout.addEventListener('click', () => {
+            window.location = 'main.html'
+        });
+        fetch('http://localhost:3000/user-details')
+            .then(response => response.json())
+            .then(user => {
+                if (user.is_admin === 1) {
+                    document.getElementById('admin-link').style.display = 'block';
+                    document.getElementById('admin').innerHTML = `Da`
+                }
+                else {
+                    document.getElementById('admin').innerHTML = `Nu`
+                }
+
+            })
+            .catch(error => console.error(error));
+        fetch('http://localhost:3000/user-account')
+            .then(response => response.json())
+            .then(user => {
+                document.getElementById('cod').innerText = `${user.cod}`
+                document.getElementById("username").innerText = `${user.username}`
+            })
+            .catch(error => console.error(error));
+    </script>
+
+</body>
+
+
+</html>

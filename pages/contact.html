@@ -17,6 +17,7 @@
                 <li><a href="about.html">Despre noi</a></li>
                 <li><a href="contact.html">Contact</a></li>
                 <li><a href="cos.html">Coș</a></li>
+                <li><a href="cont.html">Contul meu</a></li>
                 <li id="admin-link" style="display:none;"><a href="admin.html">Admin</a></li>
             </ul>
         </nav>
@@ -58,7 +59,7 @@
                 <p>Contactați-ne la adresa colaborari@bookbox.com</p>
             </li>
         </ul>
-        <label id="see-more-btn">See more...</label>
+        <label id="see-more-btn">Mai mult...</label>
     </div>
 
     <footer>
@@ -73,9 +74,9 @@
         seeMoreBtn.addEventListener('click', function () {
             faqList.classList.toggle('show-all');
             if (faqList.classList.contains('show-all')) {
-                seeMoreBtn.textContent = 'See less...';
+                seeMoreBtn.textContent = 'Mai puțin...';
             } else {
-                seeMoreBtn.textContent = 'See more...';
+                seeMoreBtn.textContent = 'Mai mult...';
             }
         });
 

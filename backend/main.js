@@ -271,6 +271,27 @@ app.get('/user-details', (req, res) => {
 }
 );
 
+
+app.get('/user-account', (req, res) => {
+
+    connection.query("SELECT * FROM Utilizatori WHERE id = ?", req.sessionStore.userId, (error, results) => {
+        if (error) {
+            // Return an error response
+            res.status(500).json({ error: 'Internal server error' });
+            console.error('Error:', error);
+        } else if (results.length === 0) {
+            // Return a not found response
+            console.error('Error:', error);
+            res.status(404).json({ error: 'User not found' });
+        } else {
+            res.status(302);
+            // Return the user's details
+            res.json(results[0]);
+        }
+    });
+}
+);
+
 app.delete('/books/:id', (req, res) => {
     const { id } = req.params;
     const sql = `DELETE FROM Carti WHERE id = ${id}`;
