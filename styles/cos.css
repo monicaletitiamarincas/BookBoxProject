@@ -60,6 +60,15 @@ input {
     height: 30px;
 }
 
+footer {
+    background-color: #b6dbff;
+    color: #333;
+    padding: 5px;
+    width: 100%;
+    text-align: center;
+    margin-top: auto;
+}
+
 select {
     border-color: #5ba0e9;
     border-style: dashed;

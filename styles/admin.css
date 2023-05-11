@@ -17,6 +17,15 @@ nav ul {
     height: 100%;
 }
 
+footer {
+    background-color: #b6dbff;
+    color: #333;
+    padding: 5px;
+    width: 100%;
+    text-align: center;
+    margin-top: auto;
+}
+
 nav li {
     margin: 0 10px;
 }

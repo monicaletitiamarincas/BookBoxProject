@@ -134,6 +134,21 @@ app.post('/signup', (req, res) => {
                             return;
                         }
                         res.status(200).json({ message: 'User created successfully' });
+                        connection.query('SELECT id, is_admin FROM Utilizatori WHERE username = ?', username, (err, res) => {
+                            if (error) {
+                                console.error('Error retreiving user in MySQL database:', error);
+                                res.status(500).json({ error: 'Internal server error' });
+                                return;
+                            }
+                            if (res.length > 0) {
+                                const user = res[0];
+                                req.sessionStore.isAdmin = user.is_admin;
+                                req.sessionStore.userId = user.id;
+
+                            }
+                        })
+
+
                     });
                 }
             })
